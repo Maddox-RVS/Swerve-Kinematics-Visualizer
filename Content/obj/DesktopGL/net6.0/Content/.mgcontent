@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/Fonts/ProgressBar.spritefont</File>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/Fonts/ProgressBarName.spritefont</File>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/GUI/GUIOverlay.png</File>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/GUI/ProgressBar.png</File>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/GUI/ProgressBarFilling.png</File>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/Robot/RobotFrame.png</File>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/Robot/SwerveModule.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
