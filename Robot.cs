@@ -40,6 +40,9 @@ namespace SwerveVisualizer
                 3,
                 Color.Blue,
                 Color.Yellow,
+                AngleMarker.Spin.CLOCKWISE,
+                270,
+                90,
                 graphicsDevice);
 
             AngleMarker marker0 = trajectoryLineSetup;

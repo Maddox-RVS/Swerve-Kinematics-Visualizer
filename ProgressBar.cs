@@ -57,9 +57,9 @@ namespace SwerveVisualizer
             return new Vector2(x, y);
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
+        public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color color)
         {
-            spriteBatch.Draw(barTexture, barBounds, Color.White);
+            spriteBatch.Draw(barTexture, barBounds, color);
             spriteBatch.Draw(fillTexture, fillBounds, Color.White);
 
             if (value >= 0)
