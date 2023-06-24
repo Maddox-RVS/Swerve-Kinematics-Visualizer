@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Content",
+    "\\Content\\fonts",
+    "\\Content\\GUI",
+    "\\Content\\Robot"
   ],
+  "SelectedNode": "\\Kinematics.cs",
   "PreviewInSolutionExplorer": false
 }
