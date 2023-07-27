@@ -52,11 +52,6 @@ namespace SwerveVisualizer
             showBaseLine = true;
         }
 
-        public float convertDegreesToRadians(float degrees)
-        {
-            return (float) ((Math.PI / 180) * degrees);
-        }
-
         public float getBaseLineLength()
         {
             return baseLineLength;
@@ -154,7 +149,7 @@ namespace SwerveVisualizer
                     new Rectangle((int) x, (int) y, (int) baseLineLength, (int) baseLineThickness), 
                     null, 
                     Color.White, 
-                    convertDegreesToRadians(applyAngleTanslation(baseLineAngle)), 
+                    Trigonometry.convertDegreesToRadians(applyAngleTanslation(baseLineAngle)), 
                     new Vector2(0.5f, 0), 
                     SpriteEffects.None, 0);
             }
@@ -166,7 +161,7 @@ namespace SwerveVisualizer
                     new Rectangle((int) x, (int) (y + 0.5f + angleLineThickness/2), (int) angleLineLength, (int) angleLineThickness), 
                     null, 
                     Color.White, 
-                    convertDegreesToRadians(applyAngleTanslation(angle)), 
+                    Trigonometry.convertDegreesToRadians(applyAngleTanslation(angle)), 
                     new Vector2(0, 0.5f), 
                     SpriteEffects.None, 0);
             }
@@ -178,7 +173,7 @@ namespace SwerveVisualizer
                     new Rectangle((int) (x + Trigonometry.getHypotenuseLegPoint(angleLineLength, applyAngleTanslation(angle)).X), (int) (y + 0.5f + Trigonometry.getHypotenuseLegPoint(angleLineLength - (angleLineThickness/2), applyAngleTanslation(angle)).Y + angleLineThickness / 2), (int) (angleLineThickness*5), (int) angleLineThickness),
                     null,
                     Color.White,
-                    convertDegreesToRadians(applyAngleTanslation(angle) - 180 + 45),
+                    Trigonometry.convertDegreesToRadians(applyAngleTanslation(angle) - 180 + 45),
                     new Vector2(0, 0.5f),
                     SpriteEffects.None, 0);
 
@@ -187,7 +182,7 @@ namespace SwerveVisualizer
                     new Rectangle((int) (x + Trigonometry.getHypotenuseLegPoint(angleLineLength, applyAngleTanslation(angle)).X), (int) (y + 0.5f + Trigonometry.getHypotenuseLegPoint(angleLineLength - (angleLineThickness/2), applyAngleTanslation(angle)).Y + angleLineThickness / 2), (int) (angleLineThickness*5), (int) angleLineThickness),
                     null,
                     Color.White,
-                    convertDegreesToRadians(applyAngleTanslation(angle) - 180 - 45),
+                    Trigonometry.convertDegreesToRadians(applyAngleTanslation(angle) - 180 - 45),
                     new Vector2(0, 0.5f),
                     SpriteEffects.None, 0);
             }

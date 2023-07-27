@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -13,115 +14,48 @@ namespace SwerveVisualizer
     internal class Robot
     {
         private SwerveModule[] swerveModules;
-        private AngleMarker[] driveVelocityLines, angleVelocityLines, trajectoryLines;
+        private SwerveModuleState[] swerveModuleStates;
+        private AngleMarker[] velocityLines;
         private float x, y, chassisSize;
-        private Texture2D lineThing;
-        private AngleMarker angleVelocityAbsoluteAngle, driveVelocityAbsoluteAngle;
 
         public Robot(Texture2D swerveModuleTexture, float x, float y, float chassisSize, GraphicsDevice graphicsDevice)
         {
             //Front right
-            SwerveModule module0 = new SwerveModule(0, swerveModuleTexture);
+            SwerveModule module0 = new SwerveModule(0, 0, swerveModuleTexture);
 
             //Front left
-            SwerveModule module1 = new SwerveModule(0, swerveModuleTexture);
+            SwerveModule module1 = new SwerveModule(0, 1, swerveModuleTexture);
 
             //Back left
-            SwerveModule module2 = new SwerveModule(0, swerveModuleTexture);
+            SwerveModule module2 = new SwerveModule(0, 2, swerveModuleTexture);
 
             //Back right
-            SwerveModule module3 = new SwerveModule(0, swerveModuleTexture);
+            SwerveModule module3 = new SwerveModule(0, 3, swerveModuleTexture);
 
             swerveModules = new SwerveModule[] { module0, module1, module2, module3 };
+            swerveModuleStates = new SwerveModuleState[swerveModules.Length];
 
-            AngleMarker angleVelocityLineSetup = new AngleMarker(
-                x, y,
-                0,
-                100,
-                3,
-                Color.Blue,
-                Color.Red,
-                AngleMarker.Spin.CLOCKWISE,
-                270,
-                0,
-                graphicsDevice);
-            angleVelocityLineSetup.setShowBaseLine(false);
-
-            AngleMarker angleMarker0 = angleVelocityLineSetup;
-            AngleMarker angleMarker1 = angleVelocityLineSetup;
-            AngleMarker angleMarker2 = angleVelocityLineSetup;
-            AngleMarker angleMarker3 = angleVelocityLineSetup;
-
-            angleVelocityLines = new AngleMarker[] { angleMarker0, angleMarker1, angleMarker2, angleMarker3 };
-
-            AngleMarker driveVelocityLineSetup = new AngleMarker(
-                x, y,
-                0,
-                100,
-                3,
-                Color.Blue,
-                Color.Blue,
-                AngleMarker.Spin.COUNTER_CLOCKWISE,
+            AngleMarker velocityLineSetup = new AngleMarker(
+                0, 0,
                 0,
                 0,
-                graphicsDevice);
-            driveVelocityLineSetup.setShowBaseLine(false);
-
-            AngleMarker driveMarker0 = driveVelocityLineSetup;
-            AngleMarker driveMarker1 = driveVelocityLineSetup;
-            AngleMarker driveMarker2 = driveVelocityLineSetup;
-            AngleMarker driveMarker3 = driveVelocityLineSetup;
-
-            driveVelocityLines = new AngleMarker[] { driveMarker0, driveMarker1, driveMarker2, driveMarker3 };
-
-            AngleMarker trajectoryLineSetup = new AngleMarker(
-                x, y,
-                0,
-                100,
                 3,
                 Color.Blue,
                 Color.Yellow,
                 AngleMarker.Spin.CLOCKWISE,
-                90,
+                270,
                 0,
                 graphicsDevice);
-            trajectoryLineSetup.setShowBaseLine(false);
-            trajectoryLineSetup.setShowArrowHead(true);
-
-            AngleMarker trajectoryMarker0 = trajectoryLineSetup;
-            AngleMarker trajectoryMarker1 = trajectoryLineSetup;
-            AngleMarker trajectoryMarker2 = trajectoryLineSetup;
-            AngleMarker trajectoryMarker3 = trajectoryLineSetup;
-
-            trajectoryLines = new AngleMarker[] { trajectoryMarker0, trajectoryMarker1, trajectoryMarker2, trajectoryMarker3 };
+            velocityLineSetup.setShowArrowHead(true);
+            velocityLines = new AngleMarker[] {
+                velocityLineSetup,
+                velocityLineSetup,
+                velocityLineSetup,
+                velocityLineSetup};
 
             this.x = x;
             this.y = y;
             this.chassisSize = chassisSize;
-
-            angleVelocityAbsoluteAngle = new AngleMarker(
-                711, 300,
-                0,
-                250,
-                5,
-                Color.Black,
-                Color.Red,
-                AngleMarker.Spin.COUNTER_CLOCKWISE,
-                0,
-                0,
-                graphicsDevice);
-            driveVelocityAbsoluteAngle = new AngleMarker(
-                711, 300,
-                0,
-                250,
-                5,
-                Color.Black,
-                Color.Blue,
-                AngleMarker.Spin.COUNTER_CLOCKWISE,
-                0,
-                0,
-                graphicsDevice);
-            driveVelocityAbsoluteAngle.setShowBaseLine(false);
         }
 
         public void updateModuleStates(float forwardVelocity, float straithVelocity, float rotationVelocity)
@@ -201,25 +135,58 @@ namespace SwerveVisualizer
             //swerveModules[3].setDrive(ws4);
             //swerveModules[3].setAngle(wa4);
 
-            if (rotationVelocity > 0) angleVelocityLines[0].setAngle(315);
-            else if (rotationVelocity < 0) angleVelocityLines[0].setAngle(135);
-            else angleVelocityLines[0].setAngle(Trigonometry.convertSlopeToDegrees(forwardVelocity, straithVelocity));
-            angleVelocityLines[0].setAngleLineLength(100 * Math.Abs(rotationVelocity));
+            //---------------------------------
 
-            driveVelocityLines[0].setAngle(Trigonometry.convertSlopeToDegrees(forwardVelocity, straithVelocity));
-            driveVelocityLines[0].setAngleLineLength(100 * Trigonometry.convertSlopeToHypotenuse(forwardVelocity, straithVelocity));
-            driveVelocityLines[0].setPosition(
-                angleVelocityLines[0].getPosition().X - Trigonometry.getHypotenuseLegPoint(angleVelocityLines[0].getAngleLineLength(), angleVelocityLines[0].getAngle()).X,
-                angleVelocityLines[0].getPosition().Y + Trigonometry.getHypotenuseLegPoint(angleVelocityLines[0].getAngleLineLength(), angleVelocityLines[0].getAngle()).Y);
+            //if (rotationVelocity > 0) angleVelocityLines[0].setAngle(135);
+            //else if (rotationVelocity < 0) angleVelocityLines[0].setAngle(315);
+            //else angleVelocityLines[0].setAngle(Trigonometry.convertSlopeToDegrees(forwardVelocity, straithVelocity));
+            //angleVelocityLines[0].setAngleLineLength(100 * Math.Abs(rotationVelocity));
 
-            angleVelocityAbsoluteAngle.setAngle(angleVelocityLines[0].getAngle());
-            driveVelocityAbsoluteAngle.setAngle(driveVelocityLines[0].getAngle());
-            float angleDifference = Math.Abs(angleVelocityAbsoluteAngle.getAngle() - driveVelocityAbsoluteAngle.getAngle());
+            //driveVelocityLines[0].setAngle(Trigonometry.convertSlopeToDegrees(forwardVelocity, straithVelocity));
+            //driveVelocityLines[0].setAngleLineLength(100 * Trigonometry.convertSlopeToHypotenuse(forwardVelocity, straithVelocity));
+            //driveVelocityLines[0].setPosition(
+            //    angleVelocityLines[0].getPosition().X - Trigonometry.getHypotenuseLegPoint(angleVelocityLines[0].getAngleLineLength(), angleVelocityLines[0].getAngle()).X,
+            //    angleVelocityLines[0].getPosition().Y + Trigonometry.getHypotenuseLegPoint(angleVelocityLines[0].getAngleLineLength(), angleVelocityLines[0].getAngle()).Y);
 
-            trajectoryLines[0].setPosition(angleVelocityLines[0].getPosition().X, angleVelocityLines[0].getPosition().Y);
-            trajectoryLines[0].setAngleLineLength(Trigonometry.getMissingSideLength(angleDifference, angleVelocityLines[0].getAngleLineLength(), driveVelocityLines[0].getAngleLineLength())/10);
+            //angleVelocityAbsoluteAngle.setAngle(angleVelocityLines[0].getAngle());
+            //driveVelocityAbsoluteAngle.setAngle(driveVelocityLines[0].getAngle());
+            //float angleDifference = Math.Abs(angleVelocityAbsoluteAngle.getAngle() - driveVelocityAbsoluteAngle.getAngle());
 
-            Debug.WriteLine(angleDifference + " | " + angleVelocityLines[0].getAngleLineLength().ToString("0.000") + " | " + driveVelocityLines[0].getAngleLineLength().ToString("0.000") + " | " + trajectoryLines[0].getAngleLineLength().ToString("0.000"));
+            //trajectoryLines[0].setPosition(angleVelocityLines[0].getPosition().X, angleVelocityLines[0].getPosition().Y);
+            //trajectoryLines[0].setAngleLineLength(Trigonometry.getMissingSideLength(angleDifference, angleVelocityLines[0].getAngleLineLength(), driveVelocityLines[0].getAngleLineLength()));
+            //trajectoryLines[0].setAngle(
+            //    Trigonometry.getLineAngle(
+            //        Trigonometry.getHypotenuseLegPoint(driveVelocityLines[0].getAngleLineLength(), driveVelocityLines[0].getAngle()).Y,
+            //        angleVelocityLines[0].getPosition().Y,
+            //        Trigonometry.getHypotenuseLegPoint(driveVelocityLines[0].getAngleLineLength(), driveVelocityLines[0].getAngle()).X,
+            //        angleVelocityLines[0].getPosition().X));
+
+            //trajectoryLines[0].setAngle(Trigonometry.convertSlopeToDegrees(5, -1));
+
+            //driveVelocityAbsoluteAngle.setAngle(driveVelocityLines[0].getAngle());
+            //angleVelocityAbsoluteAngle.setAngle(angleVelocityLines[0].getAngle());
+            //trajVelocityAbsoluteAngle.setAngle(trajectoryLines[0].getAngle());
+
+            //---------------------------------
+
+            for (int i = 0; i < 4; i++) {
+                swerveModuleStates[i] = Kinematics.updateSwerveModuleState(
+                    straithVelocity, 
+                    forwardVelocity, 
+                    rotationVelocity, 
+                    Globals.Swerve.MAX_VELOCITY, 
+                    Globals.Swerve.MAX_ANGULAR_VELOCITY, 
+                    i);
+            }
+            swerveModuleStates = Kinematics.desaturateModuleStates(swerveModuleStates);
+
+            foreach (SwerveModule module in swerveModules)
+            {
+                module.setDrive(swerveModuleStates[module.moduleNumber].getVelocity());
+                module.setAngle(swerveModuleStates[module.moduleNumber].getAngleDegrees());
+                velocityLines[module.moduleNumber].setAngleLineLength(module.getDrive() * 20);
+                velocityLines[module.moduleNumber].setAngle(module.getAngle());
+            }
         }
 
         public void setPosition(float x, float y)
@@ -237,28 +204,23 @@ namespace SwerveVisualizer
         {
             //Front right
             swerveModules[0].Draw((int) (x + chassisSize/2), (int) (y - chassisSize/2), spriteBatch);
-            angleVelocityLines[0].setPosition(x + chassisSize/2, y - chassisSize/2);
-            angleVelocityLines[0].Draw(spriteBatch);
-            driveVelocityLines[0].Draw(spriteBatch);
-            trajectoryLines[0].Draw(spriteBatch);
-            
-            if (swerveModules[0].getDrive() > 0) driveVelocityLines[0].setShowArrowHead(true);
-            else driveVelocityLines[0].setShowArrowHead(false);
+            velocityLines[0].setPosition((int) (x + chassisSize/2), (int) (y - chassisSize/2));
+            velocityLines[0].Draw(spriteBatch);
 
             //Front left
             swerveModules[1].Draw((int) (x - chassisSize/2), (int) (y - chassisSize/2), spriteBatch);
-            if (swerveModules[1].getDrive() > 0) driveVelocityLines[1].setShowArrowHead(true);
-            else driveVelocityLines[1].setShowArrowHead(false);
+            velocityLines[1].setPosition((int) (x - chassisSize/2), (int) (y - chassisSize/2));
+            velocityLines[1].Draw(spriteBatch);
 
             //Back left
             swerveModules[2].Draw((int) (x - chassisSize/2), (int) (y + chassisSize/2), spriteBatch);
-            if (swerveModules[2].getDrive() > 0) driveVelocityLines[2].setShowArrowHead(true);
-            else driveVelocityLines[2].setShowArrowHead(false);
+            velocityLines[2].setPosition((int) (x - chassisSize/2), (int) (y + chassisSize/2));
+            velocityLines[2].Draw(spriteBatch);
 
             //Back right
             swerveModules[3].Draw((int) (x + chassisSize/2), (int) (y + chassisSize/2), spriteBatch);
-            if (swerveModules[3].getDrive() > 0) driveVelocityLines[3].setShowArrowHead(true);
-            else driveVelocityLines[3].setShowArrowHead(false);
+            velocityLines[3].setPosition((int) (x + chassisSize/2), (int) (y + chassisSize/2));
+            velocityLines[3].Draw(spriteBatch);
         }
     }
 }

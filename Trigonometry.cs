@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using System.Transactions;
+using static SwerveVisualizer.AngleMarker;
 
 namespace SwerveVisualizer
 {
@@ -33,6 +31,13 @@ namespace SwerveVisualizer
             return (float) angle;
         }
 
+        public static Vector2 convertDegreesToSlope(float degrees)
+        {
+            double rise = Math.Tan(convertDegreesToRadians(degrees));
+            float run = 1;
+            return new Vector2(run, (float) rise);
+        }
+
         public static float convertSlopeToHypotenuse(float rise, float run)
         {
             double hypotenuse = Math.Pow(rise, 2) + Math.Pow(run, 2);
@@ -41,18 +46,7 @@ namespace SwerveVisualizer
 
         public static float getMissingSideLength(float theta, float side1, float side2)
         {
-            ////c^2 = a^2 + b^2 - (2ab * CosC)
-            ////a = side1
-            ////b = side2
-            ////C = theta
-            
-            double temp1 = Math.Pow(side1, 2) + Math.Pow(side2, 2); //a^2 + b^2
-            double temp2 = 2 * side1 * side2; //2ab
-            double temp3 = Math.Cos(theta); //CosC
-            double temp4 = temp3 * (180 / Math.PI); //Convert radians to degrees
-            double temp5 = temp2 * temp4; //2ab * CosC
-            double temp6 = temp1 - temp5; //a^2 + b^2 - (2ab * CosC)
-            double missingSideLength = Math.Sqrt(temp6);
+            double missingSideLength = Math.Sqrt(Math.Pow(side1, 2) + Math.Pow(side2, 2) - ((2 * side1 * side2) * convertDegreesToRadians(Math.Cos(theta))));
             return (float) missingSideLength;
         }
 
@@ -97,6 +91,24 @@ namespace SwerveVisualizer
         public static Vector2 getSlope(float y2, float y1, float x2, float x1)
         {
             return new Vector2(x2-x1, y2-y1);
+        }
+
+        public static float convertRadiansToDegrees(float radians) 
+        { 
+            return (float) (radians * (180 / Math.PI));    
+        }
+        public static float convertRadiansToDegrees(double radians) 
+        { 
+            return (float) (radians * (180 / Math.PI));    
+        }
+
+        public static float convertDegreesToRadians(float degrees)
+        {
+             return (float) ((Math.PI / 180) * degrees);
+        }
+        public static float convertDegreesToRadians(double degrees)
+        {
+             return (float) ((Math.PI / 180) * degrees);
         }
     }
 }

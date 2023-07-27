@@ -18,7 +18,8 @@ namespace SwerveVisualizer
 
         public static class Swerve
         {
-            public static float MODULE_OFFSET_DIFFERENCE = 45;
+            public static float MAX_VELOCITY = 5.5f;
+            public static float MAX_ANGULAR_VELOCITY = 5.5f;
         }
     }
 }

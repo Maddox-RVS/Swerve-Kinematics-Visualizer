@@ -13,14 +13,16 @@ namespace SwerveVisualizer
         private float driveVelocity;
         private float angleVelocity;
         private float angleOffset;
+        public int moduleNumber;
 
         private Texture2D texture;
         private Rectangle screenRect, boundsRect;
         private AngleMarker trajectoryLine;
 
-        public SwerveModule(float angleOffset, Texture2D texure)
+        public SwerveModule(float angleOffset, int moduleNumber, Texture2D texure)
         {
             this.angleOffset = angleOffset;
+            this.moduleNumber = moduleNumber;
             this.texture = texure;
 
             screenRect = new Rectangle(0, 0, Globals.Window.WIDTH, Globals.Window.HEIGHT);

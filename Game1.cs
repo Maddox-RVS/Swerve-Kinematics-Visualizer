@@ -137,7 +137,7 @@ namespace SwerveVisualizer
             _spriteBatch.DrawString(progressBarNameFont, "Left Joystick Y:", new Vector2(leftYBar.getPosition().X + 5, leftYBar.getPosition().Y - 30), Color.White);
             _spriteBatch.DrawString(progressBarNameFont, "Right Joystick X:", new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y - 30), Color.White);
 
-            //_spriteBatch.DrawString(progressBarNameFont, "Angle: " + leftTrajectory.getAngle().ToString("0.000"), new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y + 100), Color.White);
+            //_spriteBatch.DrawString(progressBarNameFont, "Angle: " + (robot.getAngle()).ToString("0.000"), new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y + 100), Color.White);
             //_spriteBatch.DrawString(progressBarNameFont, "Strength: " + (leftTrajectory.getAngleLineLength() / 250).ToString("0.000"), new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y + 130), Color.White);
             //_spriteBatch.DrawString(progressBarNameFont, "End Point: " + kinematics.getHypotenuseLegPoint(leftTrajectory.getAngleLineLength(), leftTrajectory.getAngle()).ToString("0.000"), new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y + 160), Color.White);
 
