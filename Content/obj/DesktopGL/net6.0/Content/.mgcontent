@@ -11,8 +11,10 @@
     <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/GUI/ProgressBarFilling.png</File>
     <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/Robot/RobotFrame.png</File>
     <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/Robot/SwerveModule.png</File>
+    <File>C:/Users/rynvn/Desktop/Programs/FRC/SwerveVisualizer/Content/Robot/TireMark.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

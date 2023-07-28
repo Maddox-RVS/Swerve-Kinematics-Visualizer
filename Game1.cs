@@ -10,14 +10,13 @@ namespace SwerveVisualizer
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Texture2D swerveModuleTexture, robotFrameTexture, GUIOverlayTexture, ProgressBarTexture, ProgressBarFillTexture;
+        private Texture2D swerveModuleTexture, robotFrameTexture, GUIOverlayTexture, ProgressBarTexture, ProgressBarFillTexture, tireMarkTexture;
         private float leftY, leftX, rightY, rightX;
         private GamePadState controller;
         private Robot robot;
         private ProgressBar leftXBar, leftYBar, rightXBar;
         private SpriteFont progressBarFont, progressBarNameFont;
         private AngleMarker leftTrajectory, rightTrajectory;
-        bool showModuleTrajectories, showControllerJoystickVectors, showRobotFrame;
 
         public Game1()
         {
@@ -40,7 +39,7 @@ namespace SwerveVisualizer
                 711, 300,
                 90,
                 250,
-                5,
+                3,
                 Color.Black,
                 Color.Yellow,
                 AngleMarker.Spin.COUNTER_CLOCKWISE,
@@ -53,9 +52,9 @@ namespace SwerveVisualizer
                 711, 300,
                 90,
                 250,
-                5,
+                3,
                 Color.Black,
-                Color.Blue,
+                Color.CornflowerBlue,
                 AngleMarker.Spin.COUNTER_CLOCKWISE,
                 0,
                 0,
@@ -70,6 +69,7 @@ namespace SwerveVisualizer
         {
             //GLOBALS
             swerveModuleTexture = Content.Load<Texture2D>("Robot\\SwerveModule");
+            tireMarkTexture = Content.Load<Texture2D>("Robot\\TireMark");
             robotFrameTexture = Content.Load<Texture2D>("Robot\\RobotFrame");
             GUIOverlayTexture = Content.Load<Texture2D>("GUI\\GUIOverlay");
             ProgressBarTexture = Content.Load<Texture2D>("GUI\\ProgressBar");
@@ -78,11 +78,14 @@ namespace SwerveVisualizer
             progressBarFont = Content.Load<SpriteFont>("Fonts\\ProgressBar");
             progressBarNameFont = Content.Load<SpriteFont>("Fonts\\ProgressBarName");
 
-            robot = new Robot(swerveModuleTexture, robotFrameTexture, 711, 300, 230, _graphics.GraphicsDevice);
+            robot = new Robot(swerveModuleTexture, robotFrameTexture, tireMarkTexture, 711, 300, 230, _graphics.GraphicsDevice);
 
             leftXBar = new ProgressBar(-1, 1, (355/2) - (177/2), 100, ProgressBarTexture, ProgressBarFillTexture);
             leftYBar = new ProgressBar(-1, 1, (355/2) - (177/2), 200, ProgressBarTexture, ProgressBarFillTexture);
             rightXBar = new ProgressBar(-1, 1, (355/2) - (177/2), 300, ProgressBarTexture, ProgressBarFillTexture);
+
+            leftTrajectory.setPosition((355/2) - (177/2) + (ProgressBarTexture.Width/2), 475);
+            rightTrajectory.setPosition((355/2) - (177/2) + (ProgressBarTexture.Width/2), 475);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
@@ -94,7 +97,7 @@ namespace SwerveVisualizer
 
             updateJoystickValues();
 
-            robot.updateModuleStates(leftY, leftX, rightX);
+            robot.updateModuleStates(leftY, leftX, rightX, gameTime);
 
             leftXBar.Update();
             leftYBar.Update();
@@ -105,10 +108,10 @@ namespace SwerveVisualizer
             rightXBar.setValue(rightX);
 
             leftTrajectory.setAngle(Trigonometry.convertSlopeToDegrees(leftY, leftX));
-            leftTrajectory.setAngleLineLength(Math.Clamp(250 * Trigonometry.convertSlopeToHypotenuse(leftY, leftX), 0, 250));
+            leftTrajectory.setAngleLineLength(Math.Clamp(100 * Trigonometry.convertSlopeToHypotenuse(leftY, leftX), 0, 250));
 
             rightTrajectory.setAngle(Trigonometry.convertSlopeToDegrees(rightY, rightX));
-            rightTrajectory.setAngleLineLength(Math.Clamp(250 * Trigonometry.convertSlopeToHypotenuse(rightY, rightX), 0, 250));
+            rightTrajectory.setAngleLineLength(Math.Clamp(100 * Trigonometry.convertSlopeToHypotenuse(rightY, rightX), 0, 250));
 
             base.Update(gameTime);
         }
@@ -131,23 +134,20 @@ namespace SwerveVisualizer
             GraphicsDevice.Clear(Color.LightSlateGray);
             _spriteBatch.Begin();
 
+            robot.Draw(_spriteBatch, rightX);
+
             _spriteBatch.Draw(GUIOverlayTexture, new Vector2(0, 0), Color.SlateGray);
 
             leftXBar.Draw(_spriteBatch, progressBarFont, Color.SlateGray);
             leftYBar.Draw(_spriteBatch, progressBarFont, Color.SlateGray);
             rightXBar.Draw(_spriteBatch, progressBarFont, Color.SlateGray);
 
+            leftTrajectory.Draw(_spriteBatch);
+            rightTrajectory.Draw(_spriteBatch);
+
             _spriteBatch.DrawString(progressBarNameFont, "Left Joystick X:", new Vector2(leftXBar.getPosition().X + 5, leftXBar.getPosition().Y - 30), Color.White);
             _spriteBatch.DrawString(progressBarNameFont, "Left Joystick Y:", new Vector2(leftYBar.getPosition().X + 5, leftYBar.getPosition().Y - 30), Color.White);
             _spriteBatch.DrawString(progressBarNameFont, "Right Joystick X:", new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y - 30), Color.White);
-
-            robot.Draw(_spriteBatch);
-
-            if (showControllerJoystickVectors)
-            {
-            leftTrajectory.Draw(_spriteBatch);
-            rightTrajectory.Draw(_spriteBatch);
-            }
 
             _spriteBatch.End();
             base.Draw(gameTime);

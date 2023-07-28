@@ -30,3 +30,4 @@ C:\Users\rynvn\Desktop\Programs\FRC\SwerveVisualizer\bin\Debug\net6.0\Content\GU
 C:\Users\rynvn\Desktop\Programs\FRC\SwerveVisualizer\bin\Debug\net6.0\Content\GUI\ProgressBarFilling.xnb
 C:\Users\rynvn\Desktop\Programs\FRC\SwerveVisualizer\bin\Debug\net6.0\Content\Fonts\ProgressBar.xnb
 C:\Users\rynvn\Desktop\Programs\FRC\SwerveVisualizer\bin\Debug\net6.0\Content\Fonts\ProgressBarName.xnb
+C:\Users\rynvn\Desktop\Programs\FRC\SwerveVisualizer\bin\Debug\net6.0\Content\Robot\TireMark.xnb

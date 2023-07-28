@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace SwerveVisualizer
 {
@@ -98,6 +100,16 @@ namespace SwerveVisualizer
                     state.setVelocity(state.getVelocity() / largest * Globals.Swerve.MAX_VELOCITY);
                 }
             }
+        }
+
+        public static Vector2 addVectors2(Vector2[] vectors)
+        {
+            Vector2 total = new Vector2(0, 0);
+            foreach (Vector2 vector in vectors)
+            {
+                total += vector;
+            }
+            return total;
         }
     }
 }
