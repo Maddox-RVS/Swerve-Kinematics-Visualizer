@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SwerveVisualizer
 {
@@ -10,11 +15,18 @@ namespace SwerveVisualizer
     {
         float angleDegrees;
         float velocity;
+        Vector2 vectorDirection;
 
-        public SwerveModuleState(float angleDegrees, float velocity)
+        public SwerveModuleState(float angleDegrees, float velocity, Vector2 vectorDirection)
         {
             this.angleDegrees = angleDegrees;
             this.velocity = velocity;
+            this.vectorDirection = vectorDirection;
+        }
+
+        public Vector2 getVectorDirection()
+        {
+            return vectorDirection;
         }
 
         public float getAngleDegrees()

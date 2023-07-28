@@ -2,9 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SwerveVisualizer
 {
@@ -19,7 +22,7 @@ namespace SwerveVisualizer
         private Rectangle screenRect, boundsRect;
         private AngleMarker trajectoryLine;
 
-        public SwerveModule(float angleOffset, int moduleNumber, Texture2D texure)
+        public SwerveModule(float angleOffset, int moduleNumber, Texture2D texure, GraphicsDevice graphicsDevice)
         {
             this.angleOffset = angleOffset;
             this.moduleNumber = moduleNumber;
@@ -27,6 +30,24 @@ namespace SwerveVisualizer
 
             screenRect = new Rectangle(0, 0, Globals.Window.WIDTH, Globals.Window.HEIGHT);
             boundsRect = new Rectangle(0, 0, 50, 50);
+
+             trajectoryLine = new AngleMarker(
+                0, 0,
+                0,
+                0,
+                3,
+                Color.Blue,
+                Color.Yellow,
+                AngleMarker.Spin.CLOCKWISE,
+                270,
+                0,
+                graphicsDevice);
+        }
+
+        public void setTrajectoryLineVisibility(bool status)
+        {
+            trajectoryLine.setShowAngleLine(status);
+            trajectoryLine.setShowArrowHead(status);
         }
 
         public float getAngle()
@@ -65,6 +86,10 @@ namespace SwerveVisualizer
                 new Vector2(250, 250),
                 SpriteEffects.None,
                 0);
+            trajectoryLine.setPosition(x, y);
+            trajectoryLine.setAngleLineLength(driveVelocity * 20);
+            trajectoryLine.setAngle(angleVelocity);
+            trajectoryLine.Draw(spriteBatch);
         }
     }
 }

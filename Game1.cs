@@ -17,6 +17,7 @@ namespace SwerveVisualizer
         private ProgressBar leftXBar, leftYBar, rightXBar;
         private SpriteFont progressBarFont, progressBarNameFont;
         private AngleMarker leftTrajectory, rightTrajectory;
+        bool showModuleTrajectories, showControllerJoystickVectors, showRobotFrame;
 
         public Game1()
         {
@@ -46,6 +47,8 @@ namespace SwerveVisualizer
                 0,
                 0,
                 _graphics.GraphicsDevice);
+            leftTrajectory.setShowBaseLine(false);
+            leftTrajectory.setShowArrowHead(true);
             rightTrajectory = new AngleMarker(
                 711, 300,
                 90,
@@ -58,6 +61,7 @@ namespace SwerveVisualizer
                 0,
                 _graphics.GraphicsDevice);
             rightTrajectory.setShowBaseLine(false);
+            rightTrajectory.setShowArrowHead(true);
 
             base.Initialize();
         }
@@ -74,7 +78,7 @@ namespace SwerveVisualizer
             progressBarFont = Content.Load<SpriteFont>("Fonts\\ProgressBar");
             progressBarNameFont = Content.Load<SpriteFont>("Fonts\\ProgressBarName");
 
-            robot = new Robot(swerveModuleTexture, 711, 300, 200, _graphics.GraphicsDevice);
+            robot = new Robot(swerveModuleTexture, robotFrameTexture, 711, 300, 230, _graphics.GraphicsDevice);
 
             leftXBar = new ProgressBar(-1, 1, (355/2) - (177/2), 100, ProgressBarTexture, ProgressBarFillTexture);
             leftYBar = new ProgressBar(-1, 1, (355/2) - (177/2), 200, ProgressBarTexture, ProgressBarFillTexture);
@@ -137,13 +141,13 @@ namespace SwerveVisualizer
             _spriteBatch.DrawString(progressBarNameFont, "Left Joystick Y:", new Vector2(leftYBar.getPosition().X + 5, leftYBar.getPosition().Y - 30), Color.White);
             _spriteBatch.DrawString(progressBarNameFont, "Right Joystick X:", new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y - 30), Color.White);
 
-            //_spriteBatch.DrawString(progressBarNameFont, "Angle: " + (robot.getAngle()).ToString("0.000"), new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y + 100), Color.White);
-            //_spriteBatch.DrawString(progressBarNameFont, "Strength: " + (leftTrajectory.getAngleLineLength() / 250).ToString("0.000"), new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y + 130), Color.White);
-            //_spriteBatch.DrawString(progressBarNameFont, "End Point: " + kinematics.getHypotenuseLegPoint(leftTrajectory.getAngleLineLength(), leftTrajectory.getAngle()).ToString("0.000"), new Vector2(rightXBar.getPosition().X + 5, rightXBar.getPosition().Y + 160), Color.White);
-
             robot.Draw(_spriteBatch);
-            //leftTrajectory.Draw(_spriteBatch);
-            //rightTrajectory.Draw(_spriteBatch);
+
+            if (showControllerJoystickVectors)
+            {
+            leftTrajectory.Draw(_spriteBatch);
+            rightTrajectory.Draw(_spriteBatch);
+            }
 
             _spriteBatch.End();
             base.Draw(gameTime);

@@ -28,11 +28,11 @@ namespace SwerveVisualizer
             Vector2 velocityVector = new Vector2(leftX, leftY);
             Vector2 angularVelocityVector;
             
-            if (moduleNumber == 0) angularVelocityVector = new Vector2(rightX, rightX);
-            else if (moduleNumber == 1) angularVelocityVector = new Vector2(-rightX, rightX);
-            else if (moduleNumber == 2) angularVelocityVector = new Vector2(rightX, -rightX);
+            if (moduleNumber == 0) angularVelocityVector = new Vector2(rightX, -rightX);
+            else if (moduleNumber == 1) angularVelocityVector = new Vector2(rightX, rightX);
+            else if (moduleNumber == 2) angularVelocityVector = new Vector2(-rightX, rightX);
             else if (moduleNumber == 3) angularVelocityVector = new Vector2(-rightX, -rightX);
-            else return new SwerveModuleState(0, 0);
+            else return new SwerveModuleState(0, 0, new Vector2(0, 0));
 
             Vector2 finalVelocityVector = new Vector2(
                 angularVelocityVector.X + velocityVector.X, 
@@ -44,13 +44,13 @@ namespace SwerveVisualizer
 
             //Get angle of the finalVelocityVector
             if (finalVelocityVector.X > 0 && finalVelocityVector.Y == 0)
-                return new SwerveModuleState(90, (float) finalVelocity);
+                return new SwerveModuleState(90, (float) finalVelocity, finalVelocityVector);
             else if (finalVelocityVector.X < 0 && finalVelocityVector.Y == 0)
-                return new SwerveModuleState(270, (float) finalVelocity);
+                return new SwerveModuleState(270, (float) finalVelocity, finalVelocityVector);
             else if (finalVelocityVector.Y < 0 && finalVelocityVector.X == 0)
-                return new SwerveModuleState(180, (float) finalVelocity);
+                return new SwerveModuleState(180, (float) finalVelocity, finalVelocityVector);
             else if (finalVelocityVector.Y > 0 && finalVelocityVector.X == 0)
-                return new SwerveModuleState(0, (float) finalVelocity);
+                return new SwerveModuleState(0, (float) finalVelocity, finalVelocityVector);
 
             CoordinatePlane quadrant;
             if (finalVelocityVector.X > 0 && finalVelocityVector.Y > 0)
@@ -72,10 +72,10 @@ namespace SwerveVisualizer
             else if (quadrant == CoordinatePlane.QUADRANT_4) finalAngle += 90;
 
             //Return new state
-            return new SwerveModuleState((float) finalAngle, (float) finalVelocity);
+            return new SwerveModuleState((float) finalAngle, (float) finalVelocity, finalVelocityVector);
         }
 
-        public static SwerveModuleState[] desaturateModuleStates(SwerveModuleState[] moduleStates)
+        public static void desaturateModuleStates(SwerveModuleState[] moduleStates)
         {
             //Get all four velocities
             float wv0 = moduleStates[0].getVelocity();
@@ -90,33 +90,14 @@ namespace SwerveVisualizer
                 if (moduleStates[i].getVelocity() > largest) largest = moduleStates[i].getVelocity();
             }
 
-            //If largest velocity is greater than max velocity then get overlap
-            float overlap = 0;
+            //If largest velocity is greater than max velocity then desaturate
             if (largest > Globals.Swerve.MAX_VELOCITY)
             {
-                overlap = largest - Globals.Swerve.MAX_VELOCITY;
+                foreach (SwerveModuleState state in moduleStates)
+                {
+                    state.setVelocity(state.getVelocity() / largest * Globals.Swerve.MAX_VELOCITY);
+                }
             }
-
-            //Subtract overlap from all velocities
-            wv0 -= overlap;
-            wv1 -= overlap;
-            wv2 -= overlap;
-            wv3 -= overlap;
-
-            if (wv0 < 0) wv0 = 0;
-            if (wv1 < 0) wv1 = 0;
-            if (wv2 < 0) wv2 = 0;
-            if (wv3 < 0) wv3 = 0;
-
-            //Save new states
-            SwerveModuleState[] newStates = new SwerveModuleState[moduleStates.Length];
-            newStates[0] = new SwerveModuleState(moduleStates[0].getAngleDegrees(), wv0);
-            newStates[1] = new SwerveModuleState(moduleStates[1].getAngleDegrees(), wv1);
-            newStates[2] = new SwerveModuleState(moduleStates[2].getAngleDegrees(), wv2);
-            newStates[3] = new SwerveModuleState(moduleStates[3].getAngleDegrees(), wv3);
-
-            //Return new swerve module states
-            return newStates;
         }
     }
 }
